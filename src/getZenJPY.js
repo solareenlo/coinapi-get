@@ -35,7 +35,6 @@ const getZenBTC = async (strat, end) => {
   const zen = await dispatch('ZEN', 'BTC', '1MIN', '2018-09-08T01:48:00', '2018-09-08T01:49:00', '1', 'false');
   console.log(zen);
 }
-getZenBTC();
 
 const getBTCJPY = async (start, end) => {
   const btc = await dispatch('BTC', 'JPY', '1MIN', '2018-09-08T01:48:00', '2018-09-08T01:49:00', '1', 'false');
@@ -46,8 +45,8 @@ const hoge = async (word) => {
   console.log(word);
 }
 
-// module.exports = async (time) => {
-//   setTimeout(() => {
-//     return hoge(`getZenJPY: ${time}`);
-//   }, 1000);
-// };
+module.exports = async (time) => {
+  setTimeout(() => {
+    return hoge(`getZenJPY: ${time}`);
+  }, 1000);
+};
