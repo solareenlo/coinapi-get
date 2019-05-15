@@ -2,12 +2,12 @@ const fs = require('fs');
 const csv = require('csv');
 const makeOutput = require('./makeOutput.js');
 let i = 0;
+let output = [];
 
 const parser = csv.parse({columns: true});
 const transformer = csv.transform(data => {
-  i++;
   data.Timestamp = data.Timestamp.replace(/ /g, 'T');
-  //console.log(data);
+  i++;
   return data;
 });
 const stringifier = csv.stringify({header: true});
@@ -19,7 +19,6 @@ if(process.argv.length !== 3) {
 
 const inputFile = fs.createReadStream(process.argv[2], 'utf-8');
 const outputFile = fs.createWriteStream('dest.csv', 'utf8');
-let output = [];
 
 inputFile.pipe(process.stdout);
 

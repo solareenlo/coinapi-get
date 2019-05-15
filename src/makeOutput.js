@@ -4,7 +4,6 @@ module.exports = data => {
   let output = new Object();
   let a = data.Timestamp.slice(0, -2) ;
   a = `${a}00`;
-  console.log(data.Timestamp, a);
   // let b = getZenJPY(a);
   output['日時'] = data.Timestamp;
   output['ソース'] = data.Source;
