@@ -1,70 +1,39 @@
 // @format
 const fs = require('fs');
-const csv = require('csv');
-const makeOutput = require('./makeOutput.js');
-let i = 0;
+const parse = require('csv-parse/lib/sync');
+const transformSync = require('stream-transform/lib/sync');
+const stringify = require('csv-stringify/lib/sync');
+const transform = require('stream-transform');
+const dayjs = require('dayjs');
+
+const makeOutputSync = require('./makeOutputSync.js');
+
 let output = [];
 
-const parser = csv.parse({columns: true});
-const transformer = csv.transform(data => {
-  data.Timestamp = data.Timestamp.replace(/ /g, 'T');
-  i++;
-  return data;
-});
-const stringifier = csv.stringify({header: true});
-
-if (process.argv.length !== 3) {
-  console.log(`csvファイル名を入力してください.`);
+if (process.argv.length !== 4) {
+  console.log(`inputとoutputのcsvファイル名を入力してください.`);
+  console.log('Usage');
+  console.log('sync.js input.csv output.csv');
   process.exit(1);
 }
 
-const inputFile = fs.createReadStream(process.argv[2], 'utf-8');
-const outputFile = fs.createWriteStream('dest.csv', 'utf8');
+const input = fs.readFileSync(process.argv[2], 'utf-8');
+console.log(input);
 
-inputFile.pipe(process.stdout);
+let records = parse(input, {
+  columns: true,
+});
 
-inputFile
-  .on('readable', () => {
-    while ((data = inputFile.read())) {
-      parser.write(data);
-    }
-  })
-  .on('error', err => {
-    console.error(err.message);
-  });
+// records = transformSync(records, data => {
+//   data.Timestamp = data.Timestamp.replace(/ /g, 'T');
+//   data.Timestamp = dayjs(data.Timestamp).format('YYYY-MM-DDTHH:mm:ss');
+//   return data;
+// });
 
-parser
-  .on('readable', () => {
-    while ((data = parser.read())) {
-      transformer.write(data);
-    }
-  })
-  .on('error', err => {
-    console.error(err.message);
-  });
+const out = async data => {
+  output = await makeOutputSync(data);
+  // console.log(output);
+  fs.writeFileSync(process.argv[3], stringify(output, {header: true}), 'utf-8');
+};
 
-transformer
-  .on('readable', () => {
-    while ((data = transformer.read())) {
-      output = makeOutput(data);
-      stringifier.write(output);
-    }
-  })
-  .on('error', err => {
-    console.error(err.message);
-  });
-
-stringifier
-  .on('readable', () => {
-    while ((data = stringifier.read())) {
-      outputFile.write(data);
-    }
-  })
-  .on('error', err => {
-    console.error(err.message);
-  });
-
-// console.log(inputFile);
-
-// getZenBTC();
-// getBTCJPY();
+out(records);
