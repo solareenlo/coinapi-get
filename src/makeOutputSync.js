@@ -1,13 +1,14 @@
+// @format
 const getZenJPY = require('./getZenJPY.js');
-const { map } = require('p-iteration');
+const {map} = require('p-iteration');
 const dayjs = require('dayjs');
 
-module.exports = async (data) => {
+module.exports = async data => {
   let output = await map(data, async a => {
     a.Timestamp = `${a.Timestamp.slice(0, -2)}00`;
     a.Timestamp = dayjs(a.Timestamp).format('YYYY-MM-DDTHH:mm:ss');
     let price = await getZenJPY(a.Timestamp);
-    console.log('price: '+price);
+    console.log('price: ' + price);
     let out = {};
     out['日時'] = a.Timestamp;
     out['ソース'] = 'coinapi.io';
@@ -28,4 +29,4 @@ module.exports = async (data) => {
     return out;
   });
   return output;
-}
+};

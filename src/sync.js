@@ -1,3 +1,4 @@
+// @format
 const fs = require('fs');
 const parse = require('csv-parse/lib/sync');
 const transformSync = require('stream-transform/lib/sync');
@@ -20,7 +21,7 @@ const input = fs.readFileSync(process.argv[2], 'utf-8');
 console.log(input);
 
 let records = parse(input, {
-  columns: true
+  columns: true,
 });
 
 // records = transformSync(records, data => {
@@ -29,7 +30,7 @@ let records = parse(input, {
 //   return data;
 // });
 
-const out = async (data) => {
+const out = async data => {
   output = await makeOutputSync(data);
   // console.log(output);
   fs.writeFileSync(process.argv[3], stringify(output, {header: true}), 'utf-8');
