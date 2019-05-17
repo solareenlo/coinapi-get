@@ -18,6 +18,7 @@ if (process.argv.length !== 4) {
 }
 
 const input = fs.readFileSync(process.argv[2], 'utf-8');
+console.log('Input');
 console.log(input);
 
 let records = parse(input, {
@@ -32,7 +33,8 @@ let records = parse(input, {
 
 const out = async data => {
   output = await makeOutputSync(data);
-  // console.log(output);
+  console.log('Output');
+  console.log(stringify(output, {header: true}));
   fs.writeFileSync(process.argv[3], stringify(output, {header: true}), 'utf-8');
 };
 
