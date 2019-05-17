@@ -60,12 +60,17 @@ const getBTCJPY = async () => {
 };
 
 const getZenJPY = async (start, end) => {
+  let data = {};
   const zenBTC = await dispatch('ZEN', 'BTC', '1MIN', start, end, '1', 'false');
   const btcJPY = await dispatch('BTC', 'JPY', '1MIN', start, end, '1', 'false');
-  const zenBTCAve = (zenBTC[0].price_open + zenBTC[0].price_close) / 2.0;
-  const btcJPYAve = (btcJPY[0].price_open + btcJPY[0].price_close) / 2.0;
-  console.log(zenBTC[0], btcJPY[0]);
-  return zenBTCAve * btcJPYAve;
+  console.log('Zen -> BTC');
+  console.log(zenBTC[0]);
+  console.log('BTC -> JPY');
+  console.log(btcJPY[0]);
+  data.zenBTC = (zenBTC[0].price_open + zenBTC[0].price_close) / 2.0;
+  data.btcJPY = (btcJPY[0].price_open + btcJPY[0].price_close) / 2.0;
+  console.log(data);
+  return data;
 };
 
 module.exports = async start => {
