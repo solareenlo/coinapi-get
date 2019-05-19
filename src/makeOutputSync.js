@@ -25,7 +25,7 @@ module.exports = async data => {
     out['手数料通貨'] = a.FeeCcy;
     out['手数料（JPY）'] = '0.00';
     out['手数料％'] = '0.00％';
-    out['損益（JPY)'] = value.zenBTC * value.btcJPY;
+    out['損益（JPY)'] = value.zenBTC * value.btcJPY * a.Volume;
     return out;
   });
   return output;
